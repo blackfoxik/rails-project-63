@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   #spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "Thttps://github.com/blackfoxik/rails-project-63"
+  spec.metadata["source_code_uri"] = "https://github.com/blackfoxik/rails-project-63"
   spec.metadata["changelog_uri"] = "https://github.com/blackfoxik/rails-project-63.git"
 
   # Specify which files should be added to the gem when it is released.
