@@ -26,6 +26,6 @@ jobs:
     #- name: Run the default task
     #  run: bundle exec rake
     - name: linter
-      run: make linter
+      run: make lint
     - name: test
       run: make test
