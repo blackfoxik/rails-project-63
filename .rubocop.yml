@@ -1,5 +1,11 @@
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2.2
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
