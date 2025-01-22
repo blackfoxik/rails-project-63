@@ -17,7 +17,7 @@ module HexletCode
     end
 
     def self.build_single_tag(tag_name, attributes = {})
-      attributes = attributes.reduce("") do |m, (k, v)|
+      attributes = attributes.reduce('') do |m, (k, v)|
         m += " #{k}=\"#{v}\""
         m
       end
