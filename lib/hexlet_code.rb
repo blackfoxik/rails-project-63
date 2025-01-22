@@ -3,6 +3,7 @@
 require_relative "hexlet_code/version"
 
 require_relative "hexlet_code/tag"
+require_relative "hexlet_code/form"
 # autoload HexletCode, "./hexlet_code/tag.rb"
 
 module HexletCode
