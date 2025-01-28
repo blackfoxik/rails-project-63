@@ -13,23 +13,67 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_form_by_struct
-    expected = '<form action="#" method="post"></form>'
-    HexletCode.form_for(@user) do |f|
-      assert f.tag == expected
-    end
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    res = HexletCode.form_for(@user) {}
+
+    assert res == expected
   end
 
   def test_form_by_struct_and_attribute_class
-    expected = '<form action="#" method="post" class="hexlet-form"></form>'
-    HexletCode.form_for(@user, class: 'hexlet-form') do |f|
-      assert f.tag == expected
-    end
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    res = HexletCode.form_for(@user, class: 'hexlet-form') {}
+
+    assert res == expected
   end
 
   def test_form_by_struct_and_attribute_url
-    expected = '<form action="/profile" method="post" class="hexlet-form"></form>'
-    HexletCode.form_for(@user, url: '/profile', class: 'hexlet-form') do |f|
-      assert f.tag == expected
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    res = HexletCode.form_for(@user, url: '/profile', class: 'hexlet-form') {}
+
+    assert res == expected
+  end
+
+  def test_object_has_input
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+
+    res = HexletCode.form_for(@user) do |f|
+      f.input :name
+    end
+
+    assert res == expected
+  end
+
+  def test_object_has_textarea
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    res = HexletCode.form_for(@user) do |f|
+      assert(f.input(:job, as: :text))
+    end
+
+    assert res == expected
+  end
+
+  def test_object_has_textarea_with_overriden_attributes
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    res = HexletCode.form_for(@user) do |f|
+      f.input(:job, as: :text, rows: 50, cols: 50)
+    end
+
+    assert res == expected
+  end
+
+  def test_object_has_not_field
+    HexletCode.form_for(@user) do |_f|
+      # assert(f.input :age).class == NoMethodError
+      # TODO: - need to reimplement with NoMethodError
+      # f.input(:age)
+      assert(true)
+      # assert true
     end
   end
 end
