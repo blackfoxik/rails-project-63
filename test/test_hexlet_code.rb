@@ -13,77 +13,67 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_form_by_struct
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user) {}
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_form_by_struct_and_attribute_class
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user, class: 'hexlet-form') {}
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_form_by_struct_and_attribute_url
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user, url: '/profile', class: 'hexlet-form') {}
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_object_has_input
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
 
     res = HexletCode.form_for(@user) do |f|
       f.input :name
     end
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_object_has_textarea
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user) do |f|
       assert(f.input(:job, as: :text))
     end
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_object_has_textarea_with_overriden_attributes
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user) do |f|
       f.input(:job, as: :text, rows: 50, cols: 50)
     end
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_object_has_labels_for_inputes
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     @user = User.new job: 'hexlet'
-    res = HexletCode.form_for(@user, need_labels: true) do |f|
+    res = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job
     end
-    puts "\n"
-    puts "------------res is:#{res}"
-    puts "------------exp is:#{expected}"
-    assert res == expected
+
+    assert res.html_with_labels == expected
   end
 
   def test_object_has_submit
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     @user = User.new job: 'hexlet'
     res = HexletCode.form_for(@user) do |f|
       f.input :name
@@ -91,12 +81,12 @@ class TestHexletCode < Minitest::Test
       f.submit
     end
 
-    assert res == expected
+    assert res.html == expected
   end
 
   def test_object_has_custom_submit
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
+
     @user = User.new job: 'hexlet'
     res = HexletCode.form_for(@user) do |f|
       f.input :name
@@ -104,7 +94,12 @@ class TestHexletCode < Minitest::Test
       f.submit 'Wow'
     end
 
-    assert res == expected
+    assert res.html == expected
+  end
+
+  def read_file(name)
+    file_name = "test_files/#{name}.html"
+    File.read(File.join(__dir__, file_name))
   end
 
   def test_object_has_not_field

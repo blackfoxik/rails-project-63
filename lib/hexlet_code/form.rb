@@ -1,7 +1,98 @@
 module HexletCode
   class Form
-    attr_accessor :tag, :object, :fields
+    attr_accessor :model, :fields, :attributes
 
+    def initialize(model)
+      @model = model
+    end
+
+    def input(field_name, attributes = {})
+      value = @model.public_send field_name
+      return textarea(field_name, value, attributes) if attributes[:as] == :text
+
+      plain_input(field_name, value, attributes)
+    end
+
+    def submit(name = nil)
+      value = name.nil? || name.empty? ? 'Save' : name
+      attributes = { type: 'submit', value: value }
+
+      field = Field.new(:submit, name, value, attributes)
+      @fields ||= []
+      @fields.push(field)
+      field.tag
+    end
+
+    def html_with_labels
+      @fields ||= []
+      HexletCode::Tag.build('form', attributes) do
+        @fields.reduce('') do |m, field|
+          m += label(field.name) if field.type == :input && field.type != :submit
+          m += field.tag
+          m
+        end
+      end
+    end
+
+    def html
+      @fields ||= []
+      HexletCode::Tag.build('form', attributes) do
+        @fields.reduce('') do |m, field|
+          m += field.tag
+          m
+        end
+      end
+    end
+
+    private
+
+    def label(name)
+      attributes = { for: name }
+      HexletCode::Tag.build('label', attributes) { name.to_s.capitalize }
+    end
+
+    def plain_input(field_name, value, attributes = {})
+      attributes[:name] = field_name
+      attributes[:type] = 'text'
+      attributes[:value] = value.nil? ? '' : value
+
+      field = Field.new(:input, field_name, value, attributes)
+      @fields ||= []
+      @fields.push(field)
+      field.tag
+    end
+
+    def textarea(field_name, value, attributes = {})
+      attributes[:name] = field_name
+      attributes[:rows] ||= 40
+      attributes[:cols] ||= 20
+      attributes.delete(:as)
+
+      field = Field.new(:textarea, field_name, value, attributes)
+      @fields ||= []
+      @fields.push(field)
+      field.tag
+    end
+  end
+
+  def self.form_for(model, attributes = {})
+    attributes = default_form_attributes_with attributes
+    form = Form.new(model)
+    form.attributes = attributes
+    yield form
+    form
+  end
+
+  def self.default_form_attributes_with(attributes = {})
+    attributes[:action] = attributes.delete(:url) if attributes.key?(:url)
+    default_form_attributes = { action: '#', method: 'post' }
+    default_form_attributes.merge!(attributes)
+    default_form_attributes
+  end
+end
+
+module HexletCode
+  class Form
     class Field
       attr_accessor :type, :name, :value, :attributes
 
@@ -22,81 +113,5 @@ module HexletCode
         HexletCode::Tag.build(@type.to_s, attributes)
       end
     end
-
-    def initialize(object)
-      @object = object
-    end
-
-    def input(field_name, attributes = {})
-      value = @object.public_send field_name
-      return textarea(field_name, value, attributes) if attributes[:as] == :text
-
-      plain_input(field_name, value, attributes)
-    end
-
-    def submit(name = nil)
-      value = name.nil? || name.empty? ? 'Save' : name
-      attributes = { type: 'submit', value: value }
-
-      field = Field.new(:submit, name, value, attributes)
-      @fields ||= []
-      @fields.push(field)
-      field.tag
-    end
-
-    def label(name)
-      attributes = { for: name }
-      HexletCode::Tag.build('label', attributes) { name.to_s.capitalize }
-    end
-
-    private
-
-    def plain_input(field_name, value, attributes = {})
-      attributes[:name] = field_name
-      attributes[:type] = 'text'
-      attributes[:value] = value.nil? ? '' : value
-
-      field = Field.new(:input, field_name, value, attributes)
-      @fields ||= []
-      @fields.push(field)
-      field.tag
-    end
-
-    # TODO: -move to separate class and form will contains them
-    def textarea(field_name, value, attributes = {})
-      attributes[:name] = field_name
-      attributes[:rows] ||= 40
-      attributes[:cols] ||= 20
-      attributes.delete(:as)
-
-      field = Field.new(:textarea, field_name, value, attributes)
-      @fields ||= []
-      @fields.push(field)
-      field.tag
-    end
-  end
-
-  def self.form_for(object, attributes = {})
-    need_labels = attributes[:need_labels]
-    attributes = default_attributes_for attributes
-    form = Form.new(object)
-    yield form
-    # TODO: -move to separate class and it will generate html if needed
-    form.fields ||= []
-    HexletCode::Tag.build('form', attributes) do
-      form.fields.reduce('') do |m, field|
-        m += form.label(field.name) if field.type == :input && need_labels && field.type != :submit
-        m += field.tag
-        m
-      end
-    end
-  end
-
-  def self.default_attributes_for(attributes = {})
-    attributes[:action] = attributes.delete(:url) if attributes.key?(:url)
-    attributes.delete(:need_labels)
-    default_form_attributes = { action: '#', method: 'post' }
-    default_form_attributes.merge!(attributes)
-    default_form_attributes
   end
 end
