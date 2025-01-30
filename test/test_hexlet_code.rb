@@ -75,7 +75,9 @@ class TestHexletCode < Minitest::Test
       f.input :name
       f.input :job
     end
-
+    puts "\n"
+    puts "------------res is:#{res}"
+    puts "------------exp is:#{expected}"
     assert res == expected
   end
 
@@ -83,7 +85,7 @@ class TestHexletCode < Minitest::Test
     file_name = "#{__method__}.html"
     expected = File.read(File.join(__dir__, file_name))
     @user = User.new job: 'hexlet'
-    res = HexletCode.form_for(@user, need_labels: true) do |f|
+    res = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job
       f.submit
@@ -96,7 +98,7 @@ class TestHexletCode < Minitest::Test
     file_name = "#{__method__}.html"
     expected = File.read(File.join(__dir__, file_name))
     @user = User.new job: 'hexlet'
-    res = HexletCode.form_for(@user, need_labels: true) do |f|
+    res = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job
       f.submit 'Wow'
