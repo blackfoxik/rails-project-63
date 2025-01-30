@@ -67,6 +67,44 @@ class TestHexletCode < Minitest::Test
     assert res == expected
   end
 
+  def test_object_has_labels_for_inputes
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    @user = User.new job: 'hexlet'
+    res = HexletCode.form_for(@user, need_labels: true) do |f|
+      f.input :name
+      f.input :job
+    end
+
+    assert res == expected
+  end
+
+  def test_object_has_submit
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    @user = User.new job: 'hexlet'
+    res = HexletCode.form_for(@user, need_labels: true) do |f|
+      f.input :name
+      f.input :job
+      f.submit
+    end
+
+    assert res == expected
+  end
+
+  def test_object_has_custom_submit
+    file_name = "#{__method__}.html"
+    expected = File.read(File.join(__dir__, file_name))
+    @user = User.new job: 'hexlet'
+    res = HexletCode.form_for(@user, need_labels: true) do |f|
+      f.input :name
+      f.input :job
+      f.submit 'Wow'
+    end
+
+    assert res == expected
+  end
+
   def test_object_has_not_field
     HexletCode.form_for(@user) do |_f|
       # assert(f.input :age).class == NoMethodError
