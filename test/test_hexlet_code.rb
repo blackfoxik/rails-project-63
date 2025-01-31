@@ -97,18 +97,14 @@ class TestHexletCode < Minitest::Test
     assert res.html == expected
   end
 
+  def test_object_has_not_field
+    HexletCode.form_for(@user) do |f|
+      assert_raises(NoMethodError) { f.input :age }
+    end
+  end
+
   def read_file(name)
     file_name = "test_files/#{name}.html"
     File.read(File.join(__dir__, file_name))
-  end
-
-  def test_object_has_not_field
-    HexletCode.form_for(@user) do |_f|
-      # assert(f.input :age).class == NoMethodError
-      # TODO: - need to reimplement with NoMethodError
-      # f.input(:age)
-      assert(true)
-      # assert true
-    end
   end
 end
