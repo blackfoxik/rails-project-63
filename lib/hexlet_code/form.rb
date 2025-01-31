@@ -61,18 +61,10 @@ module HexletCode
   end
 
   def self.form_for(model, attributes = {})
-    attributes = default_form_attributes_with attributes
     form = Form.new(model)
     form.attributes = attributes
     yield form
     form
-  end
-
-  def self.default_form_attributes_with(attributes = {})
-    attributes[:action] = attributes.delete(:url) if attributes.key?(:url)
-    default_form_attributes = { action: '#', method: 'post' }
-    default_form_attributes.merge!(attributes)
-    default_form_attributes
   end
 end
 
@@ -100,7 +92,8 @@ end
 module HTMLPresenter
   def self.html_form_by(form)
     fields = form.fields.nil? ? [] : form.fields
-    HexletCode::Tag.build('form', form.attributes) do
+    attributes = default_form_attributes_with form.attributes
+    HexletCode::Tag.build('form', attributes) do
       fields.reduce('') do |m, field|
         m += field.tag
         m
@@ -110,13 +103,22 @@ module HTMLPresenter
 
   def self.html_form_with_labels_by(form)
     fields = form.fields.nil? ? [] : form.fields
-    HexletCode::Tag.build('form', form.attributes) do
+    attributes = default_form_attributes_with form.attributes
+    HexletCode::Tag.build('form', attributes) do
       fields.reduce('') do |m, field|
         m += label(field.model.name) if field.type == :input && field.type != :submit
         m += field.tag
         m
       end
     end
+  end
+
+  def self.default_form_attributes_with(attributes = {})
+    action = attributes[:url].nil? ? '#' : attributes[:url]
+    default_form_attributes = { action: action, method: 'post' }
+    default_form_attributes.merge!(attributes)
+    default_form_attributes.delete(:url) if default_form_attributes.key?(:url)
+    default_form_attributes
   end
 
   def self.html_by(field)
