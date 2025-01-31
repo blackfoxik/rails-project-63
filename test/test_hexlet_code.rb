@@ -81,11 +81,6 @@ class TestHexletCode < Minitest::Test
       f.submit
     end
 
-    puts "\n"
-    puts "----exp is#{expected}"
-    puts "----res is#{res.html}"
-    # puts "----res is#{res.html_with_labels}"
-
     assert res.html == expected
   end
 
@@ -98,11 +93,6 @@ class TestHexletCode < Minitest::Test
       f.input :job
       f.submit 'Wow'
     end
-
-    puts "\n"
-    puts "----exp is#{expected}"
-    puts "----res is#{res.html}"
-    # puts "----res is#{res.html_with_labels}"
 
     assert res.html == expected
   end
