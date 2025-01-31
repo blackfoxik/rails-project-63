@@ -14,6 +14,6 @@ module HexletCode
     form = Form.new(model)
     form.attributes = attributes
     yield form
-    form
+    form.html
   end
 end
