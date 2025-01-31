@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
-require_relative 'hexlet_code/version'
-
-require_relative 'hexlet_code/tag'
-require_relative 'hexlet_code/form'
-# autoload HexletCode, "./hexlet_code/tag.rb"
-
+# require_relative 'hexlet_code/version'
 module HexletCode
-  # autoload :Tag, "./hexlet_code/tag.rb"
+  autoload :Tag, 'lib/hexlet_code/tag.rb'
+  autoload :HTMLPresenter, 'lib/hexlet_code/html_presenter.rb'
+  autoload :Form, 'lib/hexlet_code/form.rb'
+  autoload :Field, 'lib/hexlet_code/field.rb'
+
   class Error < StandardError; end
-  # Your code goes here...
-  puts Tag.build('img', src: 'path/to/image')
-  puts Tag.build('input', type: 'submit', value: 'Save')
-  puts Tag.build('br')
-  puts Tag.build('label', for: 'email') { 'Email' }
+
+  def self.form_for(model, attributes = {})
+    form = Form.new(model)
+    form.attributes = attributes
+    yield form
+    form
+  end
 end

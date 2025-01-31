@@ -61,11 +61,4 @@ module HexletCode
       field.tag
     end
   end
-
-  def self.form_for(model, attributes = {})
-    form = Form.new(model)
-    form.attributes = attributes
-    yield form
-    form
-  end
 end
