@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HexletCode
   class Tag
     def self.build(tag_name, attributes = {}, &block)

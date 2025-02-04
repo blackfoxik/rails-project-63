@@ -7,11 +7,15 @@
 User = Struct.new(:name, :job, :gender, keyword_init: true)
 user = User.new name: 'rob', job: 'hexlet', gender: 'm'
 
-html = HexletCode.form_for user, url: '/users' do |f|
+form = HexletCode.form_for user, url: '/users' do |f|
   f.input :name
   f.input :job, as: :text
 end
+form.html
+#or
+#form.html_with_labels if you need labels
 ```
+will generate:
 ```html
 # <form action="#" method="post">
 #   <input name="name" type="text" value="rob">

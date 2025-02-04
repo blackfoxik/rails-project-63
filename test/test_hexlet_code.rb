@@ -13,32 +13,28 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_form_by_struct
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
-    res = HexletCode.form_for(@user) {}
+    expected = read_file __method__.to_s
+    res = HexletCode.form_for(@user) { '' }
 
     assert res == expected
   end
 
   def test_form_by_struct_and_attribute_class
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
-    res = HexletCode.form_for(@user, class: 'hexlet-form') {}
+    expected = read_file __method__.to_s
+    res = HexletCode.form_for(@user, class: 'hexlet-form') { '' }
 
     assert res == expected
   end
 
   def test_form_by_struct_and_attribute_url
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
-    res = HexletCode.form_for(@user, url: '/profile', class: 'hexlet-form') {}
+    expected = read_file __method__.to_s
+    res = HexletCode.form_for(@user, url: '/profile', class: 'hexlet-form') { '' }
 
     assert res == expected
   end
 
   def test_object_has_input
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
 
     res = HexletCode.form_for(@user) do |f|
       f.input :name
@@ -48,8 +44,7 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_object_has_textarea
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user) do |f|
       assert(f.input(:job, as: :text))
     end
@@ -58,8 +53,7 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_object_has_textarea_with_overriden_attributes
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     res = HexletCode.form_for(@user) do |f|
       f.input(:job, as: :text, rows: 50, cols: 50)
     end
@@ -68,22 +62,20 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_object_has_labels_for_inputes
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     @user = User.new job: 'hexlet'
-    res = HexletCode.form_for(@user, need_labels: true) do |f|
-      f.input :name
-      f.input :job
+    res = HexletCode.form_for(@user) do |f|
+      f.input :name, label: true
+      f.input :job, label: true
     end
 
     assert res == expected
   end
 
   def test_object_has_submit
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
     @user = User.new job: 'hexlet'
-    res = HexletCode.form_for(@user, need_labels: true) do |f|
+    res = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job
       f.submit
@@ -93,10 +85,10 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_object_has_custom_submit
-    file_name = "#{__method__}.html"
-    expected = File.read(File.join(__dir__, file_name))
+    expected = read_file __method__.to_s
+
     @user = User.new job: 'hexlet'
-    res = HexletCode.form_for(@user, need_labels: true) do |f|
+    res = HexletCode.form_for(@user) do |f|
       f.input :name
       f.input :job
       f.submit 'Wow'
@@ -106,12 +98,13 @@ class TestHexletCode < Minitest::Test
   end
 
   def test_object_has_not_field
-    HexletCode.form_for(@user) do |_f|
-      # assert(f.input :age).class == NoMethodError
-      # TODO: - need to reimplement with NoMethodError
-      # f.input(:age)
-      assert(true)
-      # assert true
+    HexletCode.form_for(@user) do |f|
+      assert_raises(NoMethodError) { f.input :age }
     end
+  end
+
+  def read_file(name)
+    file_name = "test_files/#{name}.html"
+    File.read(File.join(__dir__, file_name))
   end
 end
