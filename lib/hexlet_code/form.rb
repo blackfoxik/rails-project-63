@@ -10,7 +10,6 @@ module HexletCode
     end
 
     def input(field_name, attributes = {})
-      # add label:false
       value = @object.public_send field_name
       return textarea(field_name, value, attributes) if attributes[:as] == :text
 
@@ -26,14 +25,6 @@ module HexletCode
       @fields ||= []
       @fields.push(field)
       field.tag
-    end
-
-    def html_with_labels
-      HTMLPresenter.html_form_with_labels_by self
-    end
-
-    def html
-      HTMLPresenter.html_form_by self
     end
 
     private

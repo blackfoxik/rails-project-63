@@ -11,6 +11,6 @@ module HexletCode
   def self.form_for(object, attributes = {})
     form = Form.new(object, attributes)
     yield form
-    form.html_with_labels
+    HTMLPresenter.html_form_with_labels_by form
   end
 end
