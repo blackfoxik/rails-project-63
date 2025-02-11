@@ -4,8 +4,9 @@ module HexletCode
   class Form
     attr_accessor :object, :fields, :attributes
 
-    def initialize(object)
+    def initialize(object, attributes = {})
       @object = object
+      @attributes = attributes
     end
 
     def input(field_name, attributes = {})

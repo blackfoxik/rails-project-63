@@ -9,8 +9,7 @@ module HexletCode
   class Error < StandardError; end
 
   def self.form_for(object, attributes = {})
-    form = Form.new(object)
-    form.attributes = attributes
+    form = Form.new(object, attributes)
     yield form
     form.html_with_labels
   end
