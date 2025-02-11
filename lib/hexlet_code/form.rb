@@ -2,15 +2,15 @@
 
 module HexletCode
   class Form
-    attr_accessor :model, :fields, :attributes
+    attr_accessor :object, :fields, :attributes
 
-    def initialize(model)
-      @model = model
+    def initialize(object)
+      @object = object
     end
 
     def input(field_name, attributes = {})
       # add label:false
-      value = @model.public_send field_name
+      value = @object.public_send field_name
       return textarea(field_name, value, attributes) if attributes[:as] == :text
 
       plain_input(field_name, value, attributes)
