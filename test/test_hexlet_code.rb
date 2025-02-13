@@ -97,6 +97,19 @@ class TestHexletCode < Minitest::Test
     assert res == expected
   end
 
+  def test_object_has_arbitrary_attribute
+    expected = read_file __method__.to_s
+
+    @user = User.new job: 'hexlet'
+    res = HexletCode.form_for(@user) do |f|
+      f.input :name, arbitrary_attribute: 'aa_value'
+      f.input :job, as: :text, arbitrary_attribute: 'aa_value'
+      f.submit
+    end
+
+    assert res == expected
+  end
+
   def test_object_has_not_field
     HexletCode.form_for(@user) do |f|
       assert_raises(NoMethodError) { f.input :age }

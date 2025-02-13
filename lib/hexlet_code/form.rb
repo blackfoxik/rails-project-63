@@ -2,11 +2,15 @@
 
 module HexletCode
   class Form
-    attr_accessor :object, :fields, :attributes
+    attr_accessor :object, :form_body
 
     def initialize(object, attributes = {})
       @object = object
-      @attributes = attributes
+      @form_body = {
+        inputs: [],
+        submit: { options: nil },
+        form_options: attributes
+      }
     end
 
     def input(field_name, attributes = {})
@@ -16,48 +20,22 @@ module HexletCode
       plain_input(field_name, value, attributes)
     end
 
-    def submit(name = nil)
-      field_model = Field::SubmitModel.new
-      field_model.name = name
-
-      field = Field.new(:submit, field_model)
-
-      @fields ||= []
-      @fields.push(field)
-      field.tag
+    def submit(button_name = nil)
+      @form_body[:submit][:options] = { button_name: button_name }
     end
 
     private
 
     def plain_input(field_name, value, attributes = {})
-      field_model = Field::PlainInputModel.new
-      field_model.name = field_name
-      field_model.value = value
-      field_model.class_attribute = attributes[:class]
-
-      field = Field.new(:input, field_model)
-
-      @fields ||= []
-      @fields.push(field)
-      field.tag
+      input = Inputs::StringInput.new(field_name, value, attributes)
+      @form_body[:inputs].push(input)
+      FormRenderer.html_input_by(input)
     end
 
     def textarea(field_name, value, attributes = {})
-      field_model = text_area_model_by(field_name, value, attributes)
-      field = Field.new(:textarea, field_model)
-      @fields ||= []
-      @fields.push(field)
-      field.tag
-    end
-
-    def text_area_model_by(field_name, value, attributes = {})
-      field_model = Field::TextareaModel.new
-      field_model.name = field_name
-      field_model.rows = attributes[:rows].nil? ? 40 : attributes[:rows]
-      field_model.cols = attributes[:cols].nil? ? 20 : attributes[:cols]
-      field_model.class_attribute = attributes[:class]
-      field_model.value = value
-      field_model
+      input = Inputs::TextInput.new(field_name, value, attributes)
+      @form_body[:inputs].push(input)
+      FormRenderer.html_input_by(input)
     end
   end
 end
